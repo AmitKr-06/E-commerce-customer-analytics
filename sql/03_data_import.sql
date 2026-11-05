@@ -1,0 +1,4 @@
+-- Data import is done from Python (notebook 06, Cell 3), not in SQL.
+-- Reason: the CSVs contain empty timestamps, and LOAD DATA LOCAL INFILE is unreliable on Windows.
+-- Method: pandas reads each CSV in data/raw/ and writes it into the matching table with DataFrame.to_sql().
+-- Run 01_create_database.sql and 02_create_tables.sql first, then run notebook 06 Cell 3.
