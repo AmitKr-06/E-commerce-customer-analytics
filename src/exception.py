@@ -11,7 +11,7 @@ def error_message_detail(error, exc_info = None):
     frames = []
     while tb:
         frames.append(tb)
-        tb = tb.tb_next()
+        tb = tb.tb_next
     own = [f for f in frames if not any(m in f.tb_frame.f_code.co_filename for m in _LIBRARY_MAKERS)]
     frame = (own or frames)[-1]                  # last frame in project code, else the innermost one
     return (f"Error in script [{frame.tb_frame.f_code.co_filename}]" 
