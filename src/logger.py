@@ -31,7 +31,7 @@ def configure_logger(level = logging.INFO, to_file = True):
         LOG_DIR.mkdir(exist_ok=True)
         file_handler = RotatingFileHandler(LOG_FILE, maxBytes= MAX_LOG_SIZE,
                                            backupCount= BACKUP_COUNT, encoding="utf-8")
-        file_handler.setLevel(logger.DEBUG)
+        file_handler.setLevel(logging.DEBUG)
         file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)
     return logger
