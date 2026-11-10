@@ -45,10 +45,6 @@ EXTRA_TRANSLATIONS = {                                # categories missing an En
     "pc_gamer": "pc_gamer",
 }
 
-# settings of the final late-or-not classifier (the regressor uses REG_PARAMS)
-CLF_PARAMS = dict(learning_rate=0.05, max_leaf_nodes=15, max_iter=300, min_samples_leaf=50,
-                  categorical_features="from_dtype", random_state=42)
-
 # ------------------------------- Numbers every run must reproduce ------------------------------------------------------
 EXPECTED = {
     "valid_orders": 98198,
@@ -58,13 +54,6 @@ EXPECTED = {
     "delivered_valid_orders": 96469,
 }
 
-# RFM segment sizes 
-EXPECTED_SEGMENTS = {
-    "Lapsed high spenders": 21050, "Recent high spenders": 14648, "Lapsed low spenders": 34291,
-    "Recent customers": 22106, "Repeat but lapsing": 1648, "Champions": 1239,
-}
-FORBIDDEN_FEATURES = {"total_days", "is_late", "order_delivered_customer_date", "delay_days",
-                      "review_score", "approval_days", "handling_days", "transit_days"}
 
 REVENUE_TOLERANCE = 0.01   # R$
 
@@ -90,6 +79,30 @@ REG_PARAMS = dict(loss = "absolute_error", learning_rate = 0.1, max_leaf_nodes =
                   min_samples_leaf = 50, categorical_features = "from_dtype", random_state = 42)
 
 RANDOM_STATE = 42
+
+
+# settings of the final late-or-not classifier (the regressor uses REG_PARAMS)
+CLF_PARAMS = dict(learning_rate=0.05, max_leaf_nodes=15, max_iter=300, min_samples_leaf=50,
+                  categorical_features="from_dtype", random_state=42)
+
+# numbers the model dataset must reproduce
+EXPECTED_MODEL = {
+    "rows": 96469,
+    "late_rate_pct": 8.11,
+    "mean_total_days": 12.56,
+    "mean_est_days": 23.74,
+    "split_sizes": {"train": 57316, "valid": 13801, "test": 25352},
+    "missing_distance": 477,
+    "missing_category": 1358,
+    "max_distance_km": 3398.5,
+}
+# RFM segment sizes
+EXPECTED_SEGMENTS = {
+    "Lapsed high spenders": 21050, "Recent high spenders": 14648, "Lapsed low spenders": 34291,
+    "Recent customers": 22106, "Repeat but lapsing": 1648, "Champions": 1239,
+}
+FORBIDDEN_FEATURES = {"total_days", "is_late", "order_delivered_customer_date", "delay_days",
+                      "review_score", "approval_days", "handling_days", "transit_days"}
 
 # --------------------------------------- Experiment tracking --------------------------------------------------------------
 MLFLOW_EXPERIMENT = "delivery-time-regression"
