@@ -45,14 +45,26 @@ EXTRA_TRANSLATIONS = {                                # categories missing an En
     "pc_gamer": "pc_gamer",
 }
 
+# settings of the final late-or-not classifier (the regressor uses REG_PARAMS)
+CLF_PARAMS = dict(learning_rate=0.05, max_leaf_nodes=15, max_iter=300, min_samples_leaf=50,
+                  categorical_features="from_dtype", random_state=42)
+
 # ------------------------------- Numbers every run must reproduce ------------------------------------------------------
 EXPECTED = {
     "valid_orders": 98198,
     "customers": 94982,
     "revenue": 15738221.95,
     "repeat_customers": 2887,
-    "deliverred_valid_orders": 96469,
+    "delivered_valid_orders": 96469,
 }
+
+# RFM segment sizes 
+EXPECTED_SEGMENTS = {
+    "Lapsed high spenders": 21050, "Recent high spenders": 14648, "Lapsed low spenders": 34291,
+    "Recent customers": 22106, "Repeat but lapsing": 1648, "Champions": 1239,
+}
+FORBIDDEN_FEATURES = {"total_days", "is_late", "order_delivered_customer_date", "delay_days",
+                      "review_score", "approval_days", "handling_days", "transit_days"}
 
 REVENUE_TOLERANCE = 0.01   # R$
 
