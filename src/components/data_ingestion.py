@@ -32,7 +32,7 @@ def load_raw(raw_dir = RAW_DIR, files = RAW_FILES, tables = None):
                 data[name] = pd.read_csv(raw_dir / files[name])
             except Exception as e:
                 raise CustomException(e) from e
-            log.info("loaded %-12s %10s rows x %d columns", name, f"{len(data[name]):,}", data[name].shape[1])
+            log.info("loaded  %-12s %10s rows x %d columns", name, f"{len(data[name]):,}", data[name].shape[1])
     return data
 
 
