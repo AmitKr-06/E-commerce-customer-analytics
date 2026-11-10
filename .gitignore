@@ -49,6 +49,7 @@ MANIFEST
 *.spec
 
 # Installer logs
+logs/
 pip-log.txt
 pip-delete-this-directory.txt
 
@@ -195,3 +196,7 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+mlflow.db
+mlruns/
+models/*.joblib
