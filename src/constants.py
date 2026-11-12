@@ -104,6 +104,22 @@ EXPECTED_SEGMENTS = {
 FORBIDDEN_FEATURES = {"total_days", "is_late", "order_delivered_customer_date", "delay_days",
                       "review_score", "approval_days", "handling_days", "transit_days"}
 
+
+# --------------------------------------------------------------------------------------------
+MODEL_FILE = "delivery_time_regressor.joblib"
+EXPECTED_TRAINING = {
+    # deterministic, no randomness involved: must match exactly (2 decimals)
+    "test_platform_mae": 12.67,
+    "test_line_mae": 5.21,
+    "test_auroc_est_days": 0.715,
+    "test_late_rate": 0.062,
+    # depends on the model and on the row order (early stopping): tolerance
+    "test_model_mae": (3.72, 0.10),
+    "test_model_auroc": (0.728, 0.02),
+    "cv_mean_mae": (6.230, 0.15),
+    "cv_mean_auroc": (0.668, 0.03),
+}
+
 # --------------------------------------- Experiment tracking --------------------------------------------------------------
 MLFLOW_EXPERIMENT = "delivery-time-regression"
 MLFLOW_URI = f"sqlite:///{(PROJECT_ROOT / 'mlflow.db').as_posix()}"
