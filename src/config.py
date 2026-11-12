@@ -7,9 +7,9 @@ RAW_DIR = PROJECT_ROOT / "data" / "raw"
 INTERIM_DIR = PROJECT_ROOT / "data" / "interim"
 PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 SQL_DIR = PROJECT_ROOT / "sql"
-FIG_DIR = PROJECT_ROOT / "reports" / "figures"
 MODELS_DIR = PROJECT_ROOT / "models"
-
+REPORTS_DIR = PROJECT_ROOT / "reports"
+FIG_DIR = REPORTS_DIR / "figures"   
 
 # logical table name -> file in data/raw/
 RAW_FILES = {
@@ -46,3 +46,9 @@ EXPECTED = {
     "repeat_customers": 2887,
     "delivered_valid_orders": 96469
 }
+
+# the model pipeline
+MODEL_DATA_FILE = PROCESSED_DIR / "model_dataset.parquet"
+TRAIN_METRICS_FILE = REPORTS_DIR / "train_metrics.json"
+METRICS_FILE = REPORTS_DIR / "metrics.json"
+EXPERIMENT_INFO_FILE = REPORTS_DIR / "experiment_info.json"

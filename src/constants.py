@@ -107,6 +107,7 @@ FORBIDDEN_FEATURES = {"total_days", "is_late", "order_delivered_customer_date", 
 
 # --------------------------------------------------------------------------------------------
 MODEL_FILE = "delivery_time_regressor.joblib"
+CLF_FILE = "delivery_late_classifier.joblib" 
 EXPECTED_TRAINING = {
     # deterministic, no randomness involved: must match exactly (2 decimals)
     "test_platform_mae": 12.67,
