@@ -121,6 +121,12 @@ EXPECTED_TRAINING = {
     "cv_mean_auroc": (0.668, 0.03),
 }
 
+# ----------------------------- Model Registry -------------------------------------------------------
+
+MODEL_NAME = "delivery_time_regressor"
+STAGING_ALIAS = "staging"
+PRODUCTION_ALIAS = "production"
+
 # --------------------------------------- Experiment tracking --------------------------------------------------------------
 MLFLOW_EXPERIMENT = "delivery-time-regression"
 MLFLOW_URI = f"sqlite:///{(PROJECT_ROOT / 'mlflow.db').as_posix()}"
