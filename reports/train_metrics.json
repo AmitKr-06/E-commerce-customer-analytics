@@ -1,0 +1,6 @@
+{
+    "cv_mean_mae": 6.2073022029447085,
+    "cv_mean_auroc": 0.6508690342860907,
+    "cv_mean_mae_line": 6.455622238156916,
+    "trained_on": "orders up to 2018-04-30"
+}
