@@ -8,7 +8,7 @@ from src.utils import days_between, load_parquet, save_parquet
 def test_days_between():
     a = pd.Series(pd.to_datetime(["2018-01-03 12:00:00"]))
     b = pd.Series(pd.to_datetime(["2018-01-01 00:00:00"]))
-    assert days_between(1, b).iloc[0] == pytest.approx(2.5)
+    assert days_between(a, b).iloc[0] == pytest.approx(2.5)
 
 
 def test_parquet_roundtrip(tmp_path):

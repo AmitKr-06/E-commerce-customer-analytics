@@ -24,11 +24,11 @@ def test_prediction_is_reasonable(bundle):
     row.update(est_days = 20.0, distance_km = 400.0, n_items = 1)
     for c in FEATURES_CAT:
         row[c] = bundle["categories"][c][0]
-        X = pd.DataFrame([row])[FEATURES]
-        for c in FEATURES_CAT:
-            X[c] = pd.Categorical(X[c], categories=bundle["categories"][c])
-        pred = bundle["model"].predict(X)[0]
-        assert np.isfinite(pred) and 0 < pred < 100
+    X = pd.DataFrame([row])[FEATURES]
+    for c in FEATURES_CAT:
+        X[c] = pd.Categorical(X[c], categories=bundle["categories"][c])
+    pred = bundle["model"].predict(X)[0]
+    assert np.isfinite(pred) and 0 < pred < 100
 
 
 def test_missing_values_are_accepted(bundle):

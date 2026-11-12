@@ -17,7 +17,7 @@ def orders_raw():
 
 
 @pytest.fixture
-def pyaments_raw():
+def payments_raw():
     return pd.DataFrame({
         "order_id": ["o1", "o1"],
         "payment_sequential": [1, 2],

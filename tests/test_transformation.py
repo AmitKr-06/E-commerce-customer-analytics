@@ -12,7 +12,7 @@ def test_clean_orders_late_flag(orders_raw):
 
 def test_clean_orders_delivery_days(orders_raw):
     o = clean_orders(orders_raw)
-    assert o["delivery_dyas"].iloc[0] == 10
+    assert o["delivery_days"].iloc[0] == 10
     assert o["estimated_days"].iloc[0] == 19
     assert not o["flag_extreme_delivery"].any()
 
