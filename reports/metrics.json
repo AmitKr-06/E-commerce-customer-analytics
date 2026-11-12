@@ -1,0 +1,12 @@
+{
+    "test_platform_mae": 12.665485514876464,
+    "test_line_mae": 5.205663818759988,
+    "test_model_mae": 3.73387252076227,
+    "test_model_median_abs_error": 2.739587987718057,
+    "test_model_bias": 0.4375577999449107,
+    "test_auroc_est_days": 0.7154555122297057,
+    "test_model_auroc": 0.7094515374668464,
+    "test_late_rate": 0.06212527611233828,
+    "cv_mean_mae": 6.2073022029447085,
+    "cv_mean_auroc": 0.6508690342860907
+}
