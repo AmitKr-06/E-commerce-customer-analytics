@@ -32,3 +32,8 @@ mlflow
 pytest
 pytest-cov
 httpx
+
+# for UI
+fastapi
+uvicorn[standard]
+jinja2
