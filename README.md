@@ -4,7 +4,6 @@ End-to-end analysis of the Olist Brazilian e-commerce marketplace (Oct 2016 to A
 
 > **Main finding:** late delivery is the biggest identified driver of bad reviews, and customer retention is the biggest revenue gap. Only 3.04% of customers ordered twice.
 
-![App screenshot](docs/app_screenshot.png)
 
 ---
 
