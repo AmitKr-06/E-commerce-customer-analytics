@@ -1,0 +1,717 @@
+/* --------------------------------------------------
+   Global styles
+-------------------------------------------------- */
+
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --primary-light: #eff6ff;
+
+    --background: #f5f7fb;
+    --surface: #ffffff;
+
+    --text: #172033;
+    --muted: #64748b;
+
+    --border: #e2e8f0;
+
+    --success: #15803d;
+    --danger: #dc2626;
+
+    --radius: 16px;
+    --shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--background);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+/* --------------------------------------------------
+   Navigation
+-------------------------------------------------- */
+
+.navbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+}
+
+.nav-container {
+    max-width: 1250px;
+    margin: auto;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text);
+    font-size: 19px;
+    font-weight: 750;
+    text-decoration: none;
+}
+
+.brand-icon {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: var(--primary);
+    color: white;
+    font-weight: 800;
+}
+
+.brand-highlight {
+    color: var(--primary);
+}
+
+.nav-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.status-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #22c55e;
+}
+
+/* --------------------------------------------------
+   Main layout and hero
+-------------------------------------------------- */
+
+.main-container {
+    max-width: 1250px;
+    margin: auto;
+    padding: 55px 24px;
+}
+
+.hero {
+    margin-bottom: 38px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 35px;
+}
+
+.hero-content {
+    max-width: 700px;
+}
+
+.eyebrow,
+.section-label {
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+}
+
+.hero h1 {
+    margin-top: 12px;
+    font-size: clamp(32px, 5vw, 48px);
+    line-height: 1.15;
+    letter-spacing: -1.5px;
+}
+
+.highlight {
+    color: var(--primary);
+}
+
+.hero-content p {
+    margin-top: 16px;
+    max-width: 620px;
+    color: var(--muted);
+    font-size: 15px;
+}
+
+.hero-stats {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-number {
+    color: var(--primary);
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.stat-label {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+/* --------------------------------------------------
+   Application layout
+-------------------------------------------------- */
+
+.application-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.7fr) minmax(300px, 0.85fr);
+    align-items: start;
+    gap: 24px;
+}
+
+.form-card,
+.result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.form-card {
+    padding: 30px;
+}
+
+.card-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid var(--border);
+}
+
+.card-heading h2,
+.result-heading h2 {
+    margin-top: 5px;
+    font-size: 23px;
+    letter-spacing: -0.5px;
+}
+
+.card-heading p,
+.result-heading p {
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.form-badge {
+    padding: 7px 12px;
+    border-radius: 20px;
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* --------------------------------------------------
+   Form sections
+-------------------------------------------------- */
+
+.form-section {
+    padding: 27px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 20px;
+}
+
+.section-icon {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.section-heading h3 {
+    font-size: 15px;
+}
+
+.section-heading p {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.field > span {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.field input,
+.field select {
+    width: 100%;
+    height: 45px;
+    padding: 0 13px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #fff;
+    color: var(--text);
+    font: inherit;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.field input:focus,
+.field select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+.field input::placeholder {
+    color: #a0aec0;
+}
+
+.field small {
+    color: var(--muted);
+    font-size: 10px;
+}
+
+/* --------------------------------------------------
+   Form buttons
+-------------------------------------------------- */
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.reset-button,
+.predict-button {
+    min-height: 45px;
+    padding: 0 18px;
+    border-radius: 9px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.reset-button {
+    background: white;
+    border: 1px solid var(--border);
+    color: var(--muted);
+}
+
+.reset-button:hover {
+    background: #f8fafc;
+}
+
+.predict-button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--primary);
+    border: 1px solid var(--primary);
+    color: white;
+}
+
+.predict-button:hover {
+    background: var(--primary-dark);
+}
+
+.predict-button:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.button-arrow {
+    font-size: 17px;
+}
+
+.required-note {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* --------------------------------------------------
+   Result card
+-------------------------------------------------- */
+
+.result-card {
+    position: sticky;
+    top: 20px;
+    padding: 25px;
+}
+
+.result-heading {
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.empty-result {
+    padding: 45px 12px;
+    text-align: center;
+}
+
+.empty-icon {
+    width: 65px;
+    height: 65px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 18px;
+    border-radius: 18px;
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 35px;
+}
+
+.empty-result h3,
+.loading-state h3 {
+    font-size: 15px;
+}
+
+.empty-result p,
+.loading-state p {
+    max-width: 260px;
+    margin: 8px auto 0;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+/* --------------------------------------------------
+   Loading state
+-------------------------------------------------- */
+
+.loading-state {
+    padding: 45px 10px;
+    text-align: center;
+}
+
+.loader {
+    width: 38px;
+    height: 38px;
+    margin: 0 auto 18px;
+    border: 4px solid #dbeafe;
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* --------------------------------------------------
+   Prediction result
+-------------------------------------------------- */
+
+.prediction-output {
+    padding-top: 20px;
+}
+
+.prediction-main {
+    padding: 22px 15px;
+    border-radius: 13px;
+    background: var(--primary-light);
+    text-align: center;
+}
+
+.prediction-main > span {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.prediction-value {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 8px;
+    margin: 8px 0;
+}
+
+.prediction-value strong {
+    color: var(--primary);
+    font-size: 48px;
+    line-height: 1.1;
+}
+
+.prediction-value span {
+    color: var(--muted);
+    font-size: 15px;
+}
+
+.prediction-main p {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.prediction-main p strong {
+    color: var(--text);
+}
+
+/* --------------------------------------------------
+   Result details
+-------------------------------------------------- */
+
+.result-details {
+    margin-top: 20px;
+}
+
+.result-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+}
+
+.result-row span {
+    color: var(--muted);
+}
+
+.result-row strong {
+    font-weight: 750;
+}
+
+/* --------------------------------------------------
+   Comparison and warnings
+-------------------------------------------------- */
+
+.comparison-box {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.comparison-label {
+    color: var(--primary);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.comparison-box p {
+    margin-top: 7px;
+    font-size: 12px;
+}
+
+.warnings-section {
+    margin-top: 18px;
+    padding: 14px;
+    border-radius: 10px;
+    background: #fff7ed;
+    color: #9a3412;
+}
+
+.warnings-section h3 {
+    margin-bottom: 7px;
+    font-size: 12px;
+}
+
+.warnings-section ul {
+    padding-left: 18px;
+    font-size: 11px;
+}
+
+.model-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border);
+}
+
+.model-info span {
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.model-info strong {
+    font-size: 11px;
+}
+
+/* --------------------------------------------------
+   Error state
+-------------------------------------------------- */
+
+.error-message {
+    margin-top: 20px;
+    padding: 17px;
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+    background: #fef2f2;
+    color: var(--danger);
+}
+
+.error-message h3 {
+    font-size: 14px;
+}
+
+.error-message p {
+    margin-top: 6px;
+    font-size: 12px;
+    white-space: pre-line;
+}
+
+/* --------------------------------------------------
+   Information section
+-------------------------------------------------- */
+
+.information-section {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-top: 28px;
+    padding: 22px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: white;
+}
+
+.info-icon {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: 800;
+}
+
+.information-section h3 {
+    font-size: 14px;
+}
+
+.information-section p {
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+/* --------------------------------------------------
+   Footer and utilities
+-------------------------------------------------- */
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 25px max(24px, calc((100% - 1202px) / 2));
+    border-top: 1px solid var(--border);
+    background: white;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* --------------------------------------------------
+   Responsive design
+-------------------------------------------------- */
+
+@media (max-width: 950px) {
+    .application-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .result-card {
+        position: static;
+    }
+
+    .hero {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 600px) {
+    .main-container {
+        padding: 35px 15px;
+    }
+
+    .nav-container {
+        padding: 14px 15px;
+    }
+
+    .nav-status {
+        font-size: 10px;
+    }
+
+    .hero h1 {
+        font-size: 34px;
+    }
+
+    .hero-stats {
+        gap: 20px;
+    }
+
+    .form-card,
+    .result-card {
+        padding: 20px;
+    }
+
+    .card-heading {
+        flex-direction: column;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .reset-button,
+    .predict-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .footer {
+        flex-direction: column;
+        padding: 22px 15px;
+    }
+}
