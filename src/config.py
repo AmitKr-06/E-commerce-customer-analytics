@@ -52,3 +52,5 @@ MODEL_DATA_FILE = PROCESSED_DIR / "model_dataset.parquet"
 TRAIN_METRICS_FILE = REPORTS_DIR / "train_metrics.json"
 METRICS_FILE = REPORTS_DIR / "metrics.json"
 EXPERIMENT_INFO_FILE = REPORTS_DIR / "experiment_info.json"
+
+GEO_ZIP_FILE = PROCESSED_DIR / "geo_zip.parquet"
