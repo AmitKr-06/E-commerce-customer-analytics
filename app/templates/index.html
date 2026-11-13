@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Delivery Time Estimator</title>
+
+    <meta
+        name="description"
+        content="Estimate e-commerce delivery time using machine learning."
+    >
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <header class="navbar">
+        <div class="nav-container">
+
+            <a href="/" class="brand">
+                <span class="brand-icon">D</span>
+                <span>
+                    Delivery<span class="brand-highlight">Predict</span>
+                </span>
+            </a>
+
+            <div class="nav-status">
+                <span class="status-dot"></span>
+                ML Prediction System
+            </div>
+
+        </div>
+    </header>
+
+
+    <main class="main-container">
+
+        <!-- Hero section -->
+        <section class="hero">
+
+            <div class="hero-content">
+
+                <span class="eyebrow">
+                    MACHINE LEARNING POWERED
+                </span>
+
+                <h1>
+                    Predict your delivery
+                    <span class="highlight">with confidence.</span>
+                </h1>
+
+                <p>
+                    Enter your order details to estimate delivery time.
+                    Our machine learning model analyzes order and location
+                    information to generate a prediction.
+                </p>
+
+            </div>
+
+            <div class="hero-stats">
+
+                <div class="stat-item">
+                    <span class="stat-number">ML</span>
+                    <span class="stat-label">Powered</span>
+                </div>
+
+                <div class="stat-item">
+                    <span class="stat-number">Olist</span>
+                    <span class="stat-label">Dataset</span>
+                </div>
+
+                <div class="stat-item">
+                    <span class="stat-number">API</span>
+                    <span class="stat-label">Live Prediction</span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Main application layout -->
+        <div class="application-layout">
+
+            <!-- Prediction form -->
+            <section class="form-card">
+
+                <div class="card-heading">
+
+                    <div>
+                        <span class="section-label">ORDER DETAILS</span>
+                        <h2>Delivery information</h2>
+                        <p>Complete the fields below to predict delivery time.</p>
+                    </div>
+
+                    <span class="form-badge">Prediction Form</span>
+
+                </div>
+
+
+                <form id="prediction-form">
+
+                    <!-- Customer information -->
+                    <div class="form-section">
+
+                        <div class="section-heading">
+                            <span class="section-icon">01</span>
+                            <div>
+                                <h3>Customer Information</h3>
+                                <p>Enter the delivery destination details.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+
+                            <label class="field">
+                                <span>Customer State</span>
+                                <select name="customer_state">
+                                    <option value="">Select state</option>
+                                    {% for state in states %}
+                                    <option value="{{ state }}">{{ state }}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+
+                            <label class="field">
+                                <span>Customer ZIP Prefix *</span>
+                                <input
+                                    type="text"
+                                    name="customer_zip"
+                                    inputmode="numeric"
+                                    pattern="[0-9]{5}"
+                                    minlength="5"
+                                    maxlength="5"
+                                    placeholder="e.g. 01037"
+                                    required
+                                >
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Seller information -->
+                    <div class="form-section">
+
+                        <div class="section-heading">
+                            <span class="section-icon">02</span>
+                            <div>
+                                <h3>Seller Information</h3>
+                                <p>Enter the seller's location details.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+
+                            <label class="field">
+                                <span>Seller State</span>
+                                <select name="seller_state">
+                                    <option value="">Select state</option>
+                                    {% for state in states %}
+                                    <option value="{{ state }}">{{ state }}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+
+                            <label class="field">
+                                <span>Seller ZIP Prefix *</span>
+                                <input
+                                    type="text"
+                                    name="seller_zip"
+                                    inputmode="numeric"
+                                    pattern="[0-9]{5}"
+                                    minlength="5"
+                                    maxlength="5"
+                                    placeholder="e.g. 01046"
+                                    required
+                                >
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Product information -->
+                    <div class="form-section">
+
+                        <div class="section-heading">
+                            <span class="section-icon">03</span>
+                            <div>
+                                <h3>Product Information</h3>
+                                <p>Provide details about the purchased products.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+
+                            <label class="field">
+                                <span>Main Product Category</span>
+                                <select name="main_category">
+                                    <option value="">Select category</option>
+                                    {% for category in categories %}
+                                    <option value="{{ category }}">{{ category }}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+
+                            <label class="field">
+                                <span>Number of Items</span>
+                                <input
+                                    type="number"
+                                    name="n_items"
+                                    min="1"
+                                    max="50"
+                                    step="1"
+                                    value="1"
+                                    required
+                                >
+                            </label>
+
+                            <label class="field">
+                                <span>Number of Sellers</span>
+                                <input
+                                    type="number"
+                                    name="n_sellers"
+                                    min="1"
+                                    max="20"
+                                    step="1"
+                                    value="1"
+                                    required
+                                >
+                            </label>
+
+                            <label class="field">
+                                <span>Items Price</span>
+                                <input
+                                    type="number"
+                                    name="items_price"
+                                    min="0"
+                                    step="0.01"
+                                    placeholder="e.g. 250.00"
+                                >
+                            </label>
+
+                            <label class="field">
+                                <span>Freight Value</span>
+                                <input
+                                    type="number"
+                                    name="freight"
+                                    min="0"
+                                    step="0.01"
+                                    placeholder="e.g. 25.00"
+                                >
+                            </label>
+
+                            <label class="field">
+                                <span>Product Weight (grams)</span>
+                                <input
+                                    type="number"
+                                    name="weight_g"
+                                    min="0"
+                                    step="0.01"
+                                    placeholder="e.g. 1200"
+                                >
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Delivery information -->
+                    <div class="form-section">
+
+                        <div class="section-heading">
+                            <span class="section-icon">04</span>
+                            <div>
+                                <h3>Delivery Information</h3>
+                                <p>Provide the order's delivery estimate and date.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+
+                            <label class="field">
+                                <span>Platform Estimated Days *</span>
+                                <input
+                                    type="number"
+                                    name="est_days"
+                                    min="0.01"
+                                    max="200"
+                                    step="0.01"
+                                    placeholder="e.g. 12"
+                                    required
+                                >
+                                <small>Estimated delivery days shown by the platform.</small>
+                            </label>
+
+                            <label class="field">
+                                <span>Purchase Date and Time</span>
+                                <input
+                                    type="datetime-local"
+                                    name="purchase_datetime"
+                                >
+                                <small>Optional: used to calculate the predicted date.</small>
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Form actions -->
+                    <div class="form-actions">
+
+                        <button
+                            type="reset"
+                            class="reset-button"
+                            id="reset-button"
+                        >
+                            Clear Form
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="predict-button"
+                            id="predict-button"
+                        >
+                            <span id="button-text">Predict Delivery Time</span>
+                            <span class="button-arrow">→</span>
+                        </button>
+
+                    </div>
+
+                    <p class="required-note">* Required fields</p>
+
+                </form>
+
+            </section>
+
+
+            <!-- Results section -->
+            <aside class="result-card" id="result-card">
+
+                <div class="result-heading">
+                    <span class="section-label">PREDICTION OUTPUT</span>
+                    <h2>Your prediction</h2>
+                    <p>Your estimated delivery result will appear here.</p>
+                </div>
+
+                <div class="empty-result" id="empty-result">
+                    <div class="empty-icon">⌁</div>
+                    <h3>Waiting for your order details</h3>
+                    <p>
+                        Complete the form and click the prediction button
+                        to see your estimated delivery time.
+                    </p>
+                </div>
+
+                <div class="loading-state hidden" id="loading-state">
+                    <div class="loader"></div>
+                    <h3>Analyzing your order...</h3>
+                    <p>Our machine learning model is generating your prediction.</p>
+                </div>
+
+                <div class="error-message hidden" id="error-message">
+                    <h3>Prediction failed</h3>
+                    <p id="error-text"></p>
+                </div>
+
+                <div class="prediction-output hidden" id="prediction-output">
+
+                    <div class="prediction-main">
+                        <span>Predicted Delivery Time</span>
+                        <div class="prediction-value">
+                            <strong id="predicted-days">--</strong>
+                            <span>days</span>
+                        </div>
+                        <p>
+                            Expected delivery:
+                            <strong id="predicted-date">--</strong>
+                        </p>
+                    </div>
+
+                    <div class="result-details">
+
+                        <div class="result-row">
+                            <span>Platform Estimate</span>
+                            <strong id="platform-days">--</strong>
+                        </div>
+
+                        <div class="result-row">
+                            <span>Model Prediction</span>
+                            <strong id="model-days">--</strong>
+                        </div>
+
+                        <div class="result-row">
+                            <span>Difference</span>
+                            <strong id="difference-days">--</strong>
+                        </div>
+
+                    </div>
+
+                    <div class="comparison-box">
+                        <span class="comparison-label">ESTIMATE COMPARISON</span>
+                        <p id="comparison-message"></p>
+                    </div>
+
+                    <div class="warnings-section hidden" id="warnings-section">
+                        <h3>Prediction warnings</h3>
+                        <ul id="warnings-list"></ul>
+                    </div>
+
+                    <div class="model-info">
+                        <span>Model trained on</span>
+                        <strong id="model-trained-on">--</strong>
+                    </div>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+
+        <!-- Model information -->
+        <section class="information-section">
+
+            <div class="info-icon">i</div>
+
+            <div>
+                <h3>About this prediction</h3>
+                <p>
+                    This application uses a machine learning model trained
+                    on historical Olist Brazilian E-Commerce data.
+                    Predictions are estimates and do not guarantee an
+                    actual delivery date.
+                </p>
+                <p>
+                    Model training information:
+                    <strong>{{ trained_on }}</strong>
+                </p>
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>DeliveryPredict · Machine Learning Delivery Estimator</p>
+        <span>Built with FastAPI and Python</span>
+    </footer>
+
+
+    <script src="/static/script.js"></script>
+
+</body>
+
+</html>
