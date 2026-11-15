@@ -1,0 +1,10 @@
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: amiitkr/delivery-predict:latest
+    container_name: delivery-api
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
