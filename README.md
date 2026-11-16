@@ -1,9 +1,10 @@
 # E-commerce Customer Analytics
 
-End-to-end analysis of the Olist Brazilian e-commerce marketplace (Oct 2016 to Aug 2018): data cleaning and validation, statistical tests, customer segmentation (RFM and K-Means), delivery and review analysis, a delivery-time prediction model with MLflow tracking and a model registry, and a FastAPI web app that serves the model.
+[![cd](https://github.com/AmitKr-06/E-commerce-customer-analytics/actions/workflows/cd.yaml/badge.svg)](https://github.com/AmitKr-06/E-commerce-customer-analytics/actions/workflows/cd.yaml)
+
+End-to-end analysis of the Olist Brazilian e-commerce marketplace (Oct 2016 to Aug 2018): data cleaning and validation, statistical tests, customer segmentation (RFM and K-Means), delivery and review analysis, a delivery-time prediction model with MLflow tracking and a model registry, and a FastAPI web app served from a Docker image, with CI/CD on GitHub Actions.
 
 > **Main finding:** late delivery is the biggest identified driver of bad reviews, and customer retention is the biggest revenue gap. Only 3.04% of customers ordered twice.
-
 
 ---
 
@@ -17,7 +18,9 @@ End-to-end analysis of the Olist Brazilian e-commerce marketplace (Oct 2016 to A
 - [Running the pipeline](#running-the-pipeline)
 - [Model tracking and registry](#model-tracking-and-registry)
 - [Web app and API](#web-app-and-api)
+- [Docker](#docker)
 - [Tests](#tests)
+- [CI/CD](#cicd)
 - [Data quality rules](#data-quality-rules)
 - [Limitations](#limitations)
 - [Roadmap](#roadmap)
@@ -110,16 +113,22 @@ Use the regression for an expected delivery time, not for date promises or late 
 
 ```
 E-commerce-customer-analytics/
+├── .github/workflows/
+│   ├── ci.yaml                   # tests on pull requests (also called by cd.yaml)
+│   └── cd.yaml                   # on push to main: tests, build, smoke test, push image
 ├── app/                          # FastAPI web app
 │   ├── main.py                   # routes: /, /predict, /health
 │   ├── schemas.py                # request and response models
 │   ├── templates/index.html
-│   └── static/style.css
+│   └── static/                   # style.css, script.js
+├── docker/
+│   ├── Dockerfile
+│   └── docker-compose.yaml
 ├── data/
 │   ├── raw/                      # Olist CSV files (not in git)
 │   ├── interim/
-│   └── processed/                # cleaned parquet files, model_dataset, geo_zip
-├── models/                       # saved models (not in git)
+│   └── processed/                # cleaned parquet files (git-ignored, except geo_zip.parquet)
+├── models/                       # saved models (.joblib files are git-ignored)
 ├── notebooks/                    # analysis notebooks (see below)
 ├── reports/                      # metrics.json, experiment_info.json, figures
 ├── sql/                          # MySQL analysis queries
@@ -132,8 +141,9 @@ E-commerce-customer-analytics/
 │   ├── model/
 │   │   ├── model_building.py     # rolling CV, train regressor and classifier
 │   │   ├── model_evaluation.py   # test metrics, checks, MLflow logging
-│   │   ├── model_registry.py     # register, alias staging, promote to production
-│   │   └── model_prediction.py   # Predictor class (used by the API)
+│   │   ├── model_registry.py     # register (staging), promote (production)
+│   │   ├── model_prediction.py   # Predictor class used by the API
+│   │   └── fetch_model.py        # download the production model (used by CD)
 │   ├── config.py                 # paths
 │   ├── constants.py              # business rules, features, model settings
 │   ├── db.py                     # MySQL connection and SQL runner
@@ -142,9 +152,11 @@ E-commerce-customer-analytics/
 │   ├── mlflow_utils.py           # local or DagsHub tracking setup
 │   └── utils.py
 ├── tests/                        # pytest suite
+├── .dockerignore
 ├── pytest.ini
-├── requirements.txt
-├── requirements-dev.txt
+├── requirements.txt              # full local environment (notebooks included)
+├── requirements-dev.txt          # lean list used by CI
+├── requirements-docker.txt       # runtime packages only, used by the Docker image
 └── README.md
 ```
 
@@ -164,7 +176,7 @@ The notebooks read from MySQL (`valid_orders_t`, `latest_review_t`). The `src/` 
 
 ## Setup
 
-**Requirements:** Python 3.11, MySQL (only for the notebooks).
+**Requirements:** Python 3.11, MySQL (only for the notebooks), Docker (only for the container).
 
 ```bash
 git clone https://github.com/AmitKr-06/E-commerce-customer-analytics.git
@@ -200,9 +212,8 @@ The token is in DagsHub under *Settings → Tokens*.
 Run from the project root, in this order:
 
 ```bash
-# 1. Ingest, validate, transform and save the cleaned tables
+# 1. Ingest, validate, transform and save the cleaned tables (data/processed/*.parquet)
 python -m src.components.data_transformation
-# (writes data/processed/*.parquet via save_processed)
 
 # 2. Build the model dataset, run rolling CV, train and save the models
 python -m src.model.model_building
@@ -226,12 +237,15 @@ python -m src.model.model_prediction
 
 ## Model tracking and registry
 
-- **Tracking:** parameters, metrics (test and CV), the model and the model bundle are logged to MLflow. The bundle holds the model, feature list and category levels, so new data is encoded the same way as in training.
-- **Backend:** DagsHub when `DAGSHUB_TOKEN` is set, otherwise a local `mlflow.db` (sqlite).
-- **Registry:** model name `delivery_time_regressor`. `staging` is set on registration, and `production` is a separate, deliberate step (`--promote`). The promote step refuses versions whose evaluation checks did not pass. To roll back, point `production` at an older version:
-  ```bash
-  python -m src.model.model_registry --promote --version 1
-  ```
+- **Tracking:** parameters, metrics (test and CV), the model and the model bundle (model, feature list and category levels) are logged to MLflow. [Experiments on DagsHub](https://dagshub.com/AmitKr-06/E-commerce-customer-analytics) when `DAGSHUB_TOKEN` is set, otherwise a local `mlflow.db` (sqlite).
+- **Registry:** model name `delivery_time_regressor`.
+  - `staging` is set when a version is registered.
+  - `production` is a separate, deliberate step (`--promote`), and it refuses versions whose evaluation checks did not pass.
+  - To roll back, point `production` at an older version:
+    ```bash
+    python -m src.model.model_registry --promote --version 1
+    ```
+- **Using the model by alias:** `mlflow.sklearn.load_model("models:/delivery_time_regressor@production")`, or `python -m src.model.fetch_model` to download the bundle into `models/` (this is what CD does).
 
 Local MLflow UI (when not using DagsHub):
 ```bash
@@ -270,7 +284,35 @@ curl -X POST http://127.0.0.1:8000/predict \
 }
 ```
 
-Only `est_days`, `customer_zip` and `seller_zip` are required. Missing optional values are handled by the model, and unknown zip prefixes or categories return a warning instead of an error.
+Only `est_days`, `customer_zip` and `seller_zip` are required. Missing optional values are handled by the model, and unknown zip prefixes or categories return a warning instead of an error. If no `purchase_datetime` is sent, the current date is used.
+
+## Docker
+
+The image contains the app, the trained model and `geo_zip.parquet` (zip-prefix coordinates). It does not contain data, notebooks, tests or secrets. The runtime packages are in `requirements-docker.txt`, pinned to the versions the model was trained with.
+
+**Run the published image from Docker Hub:**
+```bash
+docker pull amiitkr/delivery-predict:latest
+docker run --rm -p 8000:8000 --name delivery-api amiitkr/delivery-predict:latest
+```
+
+**Build and run locally:**
+```bash
+# with compose
+docker compose -f docker/docker-compose.yaml up --build -d
+docker compose -f docker/docker-compose.yaml logs -f
+docker compose -f docker/docker-compose.yaml down
+
+# or plain Docker
+docker build -f docker/Dockerfile -t delivery-predict .
+docker run --rm -p 8000:8000 delivery-predict
+```
+
+The build context is the project root, so run these commands from there.
+
+> **Note:** the server log says `http://0.0.0.0:8000`. That is the address inside the container. Open **`http://localhost:8000`** in your browser instead.
+
+The container has a health check on `/health` and runs as a non-root user. Check it with `docker ps` (the status becomes `healthy` after about 20 seconds).
 
 ## Tests
 
@@ -280,7 +322,30 @@ pytest                                   # all tests
 pytest --cov=src --cov-report=term-missing
 ```
 
-The suite covers cleaning rules, payments aggregation, distance, RFM scoring rules, validation checks, the evaluation checks, the saved model, the predictor and the API. Tests that need the trained model or `geo_zip.parquet` skip themselves when those files are not present. The tests use small synthetic data, so they need neither the raw CSVs nor MySQL.
+The suite covers cleaning rules, payments aggregation, distance, RFM scoring rules, validation checks, the evaluation checks, the saved model, the predictor and the API. The tests use small synthetic data, so they need neither the raw CSVs nor MySQL. Tests that need the trained model or `geo_zip.parquet` skip themselves when those files are not present.
+
+## CI/CD
+
+Two GitHub Actions workflows in `.github/workflows/`:
+
+| Workflow | Runs on | What it does |
+|---|---|---|
+| `ci.yaml` | pull requests to `main` (and when called by `cd.yaml`) | installs `requirements-dev.txt`, runs `pytest` |
+| `cd.yaml` | push to `main` | runs `ci` first, then downloads the `production` model from the registry, builds the Docker image, smoke tests it (`/health` and `/predict`), and pushes it to Docker Hub |
+
+Each image is pushed with two tags: the commit SHA (for exact rollbacks) and `latest`. If a test or the smoke test fails, no image is pushed.
+
+**Repository secrets** (*Settings → Secrets and variables → Actions*):
+
+| Secret | Purpose |
+|---|---|
+| `DOCKERHUB_USERNAME` | Docker Hub login |
+| `DOCKERHUB_TOKEN` | Docker Hub access token (Read & Write) |
+| `DAGSHUB_TOKEN` | download the production model |
+| `DAGSHUB_REPO_OWNER` | DagsHub repo owner |
+| `DAGSHUB_REPO_NAME` | DagsHub repo name |
+
+**Release flow:** train and evaluate locally, register the model, promote it to `production`, then push to `main`. CD builds the image around that production model.
 
 ## Data quality rules
 
@@ -302,13 +367,14 @@ All rules live in `src/constants.py`.
 - The three periods differ a lot in speed and late rate (7.7% in train, 13.5% in validation, 6.2% in test), so model results depend on the period.
 - Purchase-time data cannot see carrier problems, strikes or weather.
 - The test period was used to report several final models, so it is not a fresh hold-out for each one.
+- The app asks for the platform's delivery estimate, because the model uses it as an input. It is an estimate with a typical error of 3 to 4 days, not a promise.
 - Feature importance and SHAP values are descriptive, not causal.
 
 ## Roadmap
 
-- Containerize the app with Docker
-- CI/CD pipeline (tests, image build, deployment)
+- Deploy the Docker image to a hosting service
 - Re-evaluate the model on newer data before relying on it, since its advantage varied by period
+- Monitor prediction error once real orders are available
 
 ## Author
 
