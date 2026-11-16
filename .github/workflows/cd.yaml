@@ -1,0 +1,52 @@
+name: cd
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yaml     # run the tests first
+
+  build-and-push:
+    needs: ci
+    runs-on: ubuntu-latest
+    env:
+      IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/delivery-predict
+      DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
+      DAGSHUB_REPO_OWNER: ${{ secrets.DAGSHUB_REPO_OWNER }}
+      DAGSHUB_REPO_NAME: ${{ secrets.DAGSHUB_REPO_NAME }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Fetch the production model from the registry
+        run: |
+          pip install mlflow-skinny python-dotenv
+          python -m src.model.fetch_model
+
+      - name: Build image
+        run: docker build -f docker/Dockerfile -t "$IMAGE:${{ github.sha }}" .
+
+      - name: Smoke test the container
+        run: |
+          docker run -d -p 8000:8000 --name api "$IMAGE:${{ github.sha }}"
+          for i in $(seq 1 20); do curl -sf http://localhost:8000/health && break || sleep 3; done
+          curl -sf http://localhost:8000/health
+          curl -sf -X POST http://localhost:8000/predict \
+            -H "Content-Type: application/json" \
+            -d '{"est_days": 15, "customer_zip": 1037, "seller_zip": 1046}'
+          docker logs api
+          docker rm -f api
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Push image
+        run: |
+          docker tag "$IMAGE:${{ github.sha }}" "$IMAGE:latest"
+          docker push "$IMAGE:${{ github.sha }}"
+          docker push "$IMAGE:latest"
