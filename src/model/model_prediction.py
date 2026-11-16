@@ -57,7 +57,7 @@ class Predictor:
             "weight_g": order.get("weight_g"),
             "main_volume_cm3": volume,
             "purchase_month": purchase.month,
-            "purchase_weekday": purchase.dayofweek,
+            "purchase_weekday": purchase.day_of_week,
             "purchase_hour": purchase.hour,
             "customer_state": order.get("customer_state"),
             "seller_state": order.get("seller_state"),
@@ -65,9 +65,11 @@ class Predictor:
         }
         X = pd.DataFrame([row])[FEATURES]
         for c in FEATURES_CAT:
-            if X.at[0, c] is not None and X.at[0, c] not in set(self.categories[c]):
-                warnings.append(f"{c} '{X.at[0, c]}' was not seen in training: treated as missing")
-            X[c] = pd.Categorical(X[c], categories=self.categories[c])   # unseen -> NaN
+            val = X.at[0, c]
+            if val is not None and not pd.isna(val) and val not in set(self.categories[c]):
+                warnings.append(f"{c} '{val}' was not seen in training: treated as missing")
+                val = None
+            X[c] = pd.Categorical([val], categories=self.categories[c])   # unseen -> NaN
         num_cols = [c for c in FEATURES if c not in FEATURES_CAT]
         X[num_cols] = X[num_cols].astype(float)
         return X, warnings, purchase

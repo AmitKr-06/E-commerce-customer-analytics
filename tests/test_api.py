@@ -27,7 +27,8 @@ def test_health(client):
 
 def test_home_page(client):
     r = client.get("/")
-    assert r.status_code == 200 and "Delivery time estimator" in r.text
+    assert r.status_code == 200
+    assert "DeliveryPredict" in r.text
 
 
 def test_predict_ok(client):
