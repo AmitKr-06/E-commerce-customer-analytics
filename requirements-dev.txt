@@ -1,4 +1,13 @@
--r requirements.txt
+pandas
+numpy
+scikit-learn
+pyarrow
+joblib
+python-dotenv
+mlflow
+fastapi
+jinja2
+pydantic
+httpx
 pytest
 pytest-cov
-httpx
